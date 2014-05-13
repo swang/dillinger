@@ -260,6 +260,12 @@ exports.save_github = function(req, res) {
 
 }
 
+exports.history_github = function(req, res) {
+
+  Github.historyGithub(req, res)
+
+}
+
 /* End Github stuff */
 
 

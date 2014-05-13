@@ -925,6 +925,12 @@ $(function() {
         return false
       })
 
+    $('#github-history a')
+      .on('click', function() {
+        console.log("WHAT UP")
+        Github.fetchHistory()
+      })
+
     $('#import_dropbox')
       .on('click', function() {
         Dropbox.searchDropbox()
@@ -1658,7 +1664,7 @@ $(function() {
         var config = {
           type: 'POST'
         , dataType: 'json'
-        , data: 'url=' + url + "&name=" + name
+        , data: 'url=' + url
         , url: '/import/github/file'
         , error: _failHandler
         , success: _doneHandler
@@ -1668,11 +1674,36 @@ $(function() {
         $.ajax(config)
 
       }, // end fetchMarkdownFile()
+      fetchHistory: function() {
+        var ghOpts = profile.github.opts
+        $.ajax({
+          dataType: 'json'
+        , type: 'POST'
+        , url: '/history/github'
+        , data: 'name=' + ghOpts.name + '&sha=' + ghOpts.sha + '&owner=' + ghOpts.owner + '&repo=' + ghOpts.repo
+        , beforeSend: function() {
+            // $('')
+          }
+          // error: _errorHandler,
+        , success: _doneHandler
+        });
 
+        function _doneHandler(objs, b, response) {
+
+          $('#github-history-list')
+            .find('li')
+            .remove()
+            .end()
+            .append(objs.slice(0, 10).map(function(o) { return '<li>' + o.sha.substring(0, 6) + ' ' + o.commit.message + '</li>' }))
+        }
+
+      },
       clear: function() {
         delete profile.github.current_uri;
         delete profile.github.opts;
       },
+
+
       setInfo: function(uri, opts) {
         profile.github.current_uri = uri;
         profile.github.opts = opts;

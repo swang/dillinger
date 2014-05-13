@@ -15,16 +15,16 @@ app.configure(function(){
   app.set('port', process.env.PORT || 8080);
   app.set('views', __dirname + '/views');
   app.set('view engine', 'ejs');
-  app.use(express.favicon());
+  app.use(express.favicon('public/ico/favicon.ico'));
   app.use(express.logger('dev'));
   app.use(express.compress());
   app.use(express.bodyParser());
   app.use(express.methodOverride());
   app.use(express.cookieParser('your secret here'));
   app.use(express.cookieSession());
+  app.use(express.static(path.join(__dirname, 'public')));
   app.use(app.router);
   app.use(require('stylus').middleware(__dirname + '/public'));
-  app.use(express.static(path.join(__dirname, 'public')));
 
   // Setup local variables to be available in the views.
   app.locals.title = config.title || "Dillinger.";
@@ -86,6 +86,8 @@ app.post('/import/github/tree_files', routes.import_tree_files);
 app.post('/import/github/file', routes.import_github_file);
 
 app.post('/save/github', routes.save_github);
+
+app.post('/history/github', routes.history_github);
 
 /* End Github */
 

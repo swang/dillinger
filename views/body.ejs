@@ -11,9 +11,24 @@
         <span contenteditable="true">foo</span>
 
       </div>
-
       <div id="wordcounter"></div>
-      <iframe id="github-button" src="http://ghbtns.com/github-btn.html?user=joemccann&repo=dillinger&type=watch&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="94" height="20"></iframe>
+
+      <div id="github-history">
+        <div class="btn-group">
+          <a class="btn active btn-info dropdown-toggle" data-toggle="dropdown" href="#">
+            History
+            <span class="caret"></span>
+          </a>
+          <ul class="dropdown-menu" id="github-history-list">
+            <li>
+              <img src="/img/loader.gif">
+            </li>
+            <!-- dropdown menu links -->
+          </ul>
+        </div>
+      </div>
+
+      <iframe id="github-button" src="http://ghbtns.com/github-btn.html?user=joemccann&repo=dillinger&type=watch&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="94" wmode="Opaque" height="20"></iframe>
     </div>
 
 

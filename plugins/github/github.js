@@ -311,7 +311,7 @@ exports.Github = (function() {
         repo = data.repo
         owner = data.owner
 
-        uri = githubApi + "repos/" + owner + '/' + repo + '/contents/' + path
+        uri = githubApi + 'repos/' + owner + '/' + repo + '/contents/' + path
         uri += '?access_token=' + req.session.github.oauth
 
         commit = {
@@ -334,12 +334,46 @@ exports.Github = (function() {
           if (!e && r.statusCode === 200) {
             return res.json(200, JSON.parse(d))
           }
-          return res.json(400, { "error": "Unable to save file: " + (e || JSON.parse(d).message) })
+          return res.json(400, { 'error': 'Unable to save file: ' + (e || JSON.parse(d).message) })
 
         })
 
       }
+    }, // end saveToGithub
+
+    historyGithub: function(req, res) {
+      var data, uri, parts, options, owner, repo
+
+      data = req.body
+
+      owner = data.owner
+      repo = data.repo
+      uri = githubApi + 'repos/' + owner + '/' + repo + '/commits?access_token=' + req.session.github.oauth
+
+      parts = {
+        path: data.name
+      , sha: data.sha
+      , since: data.since
+      }
+
+      options = {
+        headers: headers
+      , uri: uri
+      , method: "GET"
+      , body: JSON.stringify(parts)
+      }
+
+      request(options, function(e, r, d) {
+        console.log(uri, e, r.statusCode, JSON.stringify(parts), d)
+        if (!e && r.statusCode === 200) {
+          return res.json(200, JSON.parse(d))
+        }
+        return res.json(400, { 'error': 'Unable to access history: ' + (e || JSON.parse(d).message) })
+
+      })
+
     }
+
   }
 
 })()

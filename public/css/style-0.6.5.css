@@ -811,8 +811,8 @@ scroll
 .hljs-chunk {
   color: #aaa;
 }
-pre,
-code {
+code,
+pre {
   font-family: Consolas, "Liberation Mono", Courier, monospace !important;
 }
 form {
@@ -4672,16 +4672,18 @@ noscript p {
   color: #00f;
 }
 #github-button {
-  margin: 1% -9px 0 0;
+  width: 5%;
+  min-width: 94px;
   float: right;
+  line-height: 30px;
+  margin: 5px 0;
 }
 #filename-counter-container {
   position: absolute;
   left: 10px;
   top: 5px;
   padding-right: 15px;
-  width: 50%;
-  z-index: 0;
+  width: 100%;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
@@ -4692,10 +4694,11 @@ noscript p {
   width: 100%;
 }
 #filename-counter-container > #wordcounter {
-  width: 18.5%;
+  width: 10%;
 }
 #filename-counter-container > #filename > span,
 #wordcounter {
+  overflow: hidden;
   font-size: 16px;
   font-style: normal;
   background: #f1eeee;
@@ -4716,7 +4719,7 @@ noscript p {
   outline: 0;
 }
 #filename-counter-container > #filename.show-word-count-filename-adjust {
-  width: 80%;
+  width: 50%;
   display: inline-block;
   margin: 0 1% 0 0;
 }
@@ -4734,7 +4737,7 @@ noscript p {
 #notify {
   -webkit-user-select: none;
   -moz-user-select: none;
-  width: 160px;
+  width: 300px;
   margin: 0 auto;
   background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #cfc), color-stop(1, #6c6));
   background-image: -webkit-linear-gradient(top, #cfc 0%, #6c6 100%);
@@ -4879,6 +4882,14 @@ noscript p {
   margin: 0;
   padding: 0 0 18px 25px;
   overflow: auto;
+}
+.pager .disabled>a,
+.pager .disabled>a:hover,
+.pager .disabled>a:focus,
+.pager .disabled>span {
+  color: #999;
+  background-color: #fff;
+  cursor: not-allowed;
 }
 .private_repo {
   background: transparent url("/img/icon_lock_16x16.png") no-repeat scroll top left;
