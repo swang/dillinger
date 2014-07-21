@@ -391,10 +391,24 @@ $(function() {
     else { // html
       converter = function(input) {
         var htmlEle = document.createElement("div")
+          , ejsVars
+          , outputHtml
+          , htmlRegExp
 
         htmlEle.innerHTML = input;
-
-        return htmlEle.innerHTML.replace(/(?:^\s*|\s*$)/g, '');
+        return input;
+        // console.log(input)
+        outputHtml = input.match(/(?:\<!--\s*)([\s\S]*?)(?:[\s|\n]*--\>)[\s\n]*([\s\S]*)/i)
+        if (outputHtml) {
+          try {
+            ejsVars = JSON.parse(outputHtml[1])
+          }
+          catch (e) {
+            ejsVars = {}
+          }
+          return ejs.render(outputHtml[2], ejsVars)
+        }
+        return input;
       }
       editor.getSession().setMode('ace/mode/html')
     }
@@ -1438,8 +1452,7 @@ $(function() {
       $('#modal-generic').modal({
         keyboard: true
       , backdrop: true
-      , show: true
-      })
+      }).show()
 
       return false
 
@@ -2360,3 +2373,10 @@ window.onload = function() {
   window.ace.edit('editor').session.on('changeScrollTop', syncPreview);
   window.ace.edit('editor').session.selection.on('changeCursor', syncPreview);
 }
+
+$("#sending-test-email").click(function() {
+  alert("you click button");
+  outputHtml = $("#preview iframe").contents().find("body").html();
+  outputTitle = outputHtml.match(/<title>([\s\S]*)<\/title>/i)
+  $.post('/email/send', { subject: "[[TEST-EMAIL]]: " + (outputTitle ? outputTitle[1] : ""), html: outputHtml })
+})
