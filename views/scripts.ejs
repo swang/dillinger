@@ -25,4 +25,21 @@
   <script src="/js/marked.js" type="text/javascript"></script>
   <script src="/js/keymaster.js" type="text/javascript"></script>
   <script src="/js/dillinger.js" type="text/javascript"></script>
+  <!--script src="/js/ejs.js" type="text/javascript"></script-->
 <% }%>
+
+<script src="js/medium-editor.js"></script>
+<!--link rel="stylesheet" type="text/css" href="./css/font-awesome.min.css"/ -->
+<link rel="stylesheet" type="text/css" href="./css/themes/popline.css" />
+<link rel="stylesheet" type="text/css" href="./css/themes/default.css" />
+
+
+
+<script>
+$(window).load(function() {
+  var mediumEditor = new MediumEditor(document.querySelector("#preview iframe").contentWindow.document.body, {
+  });
+})
+</script>
+
+

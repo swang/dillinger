@@ -1,0 +1,35 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>medium editor | demo</title>
+    <!--link rel="stylesheet" href="css/demo.css"-->
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+    <link rel="stylesheet" type="text/css" href="./css/medium-editor.css">
+    <!--link rel="stylesheet" href="css/themes/default.css"-->
+    <link rel="stylesheet" type="text/css" href="./css/themes/default.css" />
+<style>
+.editable,
+.secondEditable
+ {
+    outline: none;
+    margin: 0 0 20px 0;
+    padding: 0 0 20px 0;
+    border-bottom: 1px solid #dbdbdb;
+}
+</style>
+
+</head>
+
+
+<body>
+<div class="content" spellcheck="false"></div>
+</body>
+
+<script src="js/medium-editor.js"></script>
+<script>
+    var editor = new MediumEditor('.content', {
+        buttonLabels: 'fontawesome'
+    });
+
+</script>
+</html>

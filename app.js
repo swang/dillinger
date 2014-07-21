@@ -130,6 +130,8 @@ app.get('/files/pdf/:pdf', routes.download_pdf);
 
 /* End Dillinger Actions */
 
+var email_templates = require('./routes/email_templates')
+app.use(email_templates);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));

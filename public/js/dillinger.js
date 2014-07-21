@@ -326,6 +326,8 @@ $(function() {
 
       bindPreview()
 
+      bindPreviewHTML()
+
       bindNav()
 
       bindKeyboard()
@@ -391,10 +393,25 @@ $(function() {
     else { // html
       converter = function(input) {
         var htmlEle = document.createElement("div")
+          , ejsVars
+          , outputHtml
+          , htmlRegExp
 
         htmlEle.innerHTML = input;
-
         return htmlEle.innerHTML.replace(/(?:^\s*|\s*$)/g, '');
+        // // return input;
+        // // console.log(input)
+        // outputHtml = input.match(/(?:\<!--\s*)([\s\S]*?)(?:[\s|\n]*--\>)[\s\n]*([\s\S]*)/i)
+        // if (outputHtml) {
+        //   try {
+        //     ejsVars = JSON.parse(outputHtml[1])
+        //   }
+        //   catch (e) {
+        //     ejsVars = {}
+        //   }
+        //   return ejs.render(outputHtml[2], ejsVars)
+        // }
+        // return input;
       }
       editor.getSession().setMode('ace/mode/html')
     }
@@ -584,10 +601,29 @@ $(function() {
 
     var unmd = editor.getSession().getValue()
       , md = converter(unmd)
+      , cssFiles = ["./css/medium-editor.css", "./css/themes/default.css"]
+      , cssFile
+      , load
+      , mediumEditor
 
     if (editorType().type === 'html') {
       $preview.html('')
-      $('<iframe>').appendTo($preview).contents().find('body').html(md)
+      // $('<iframe>').appendTo($preview).contents().find('body').html(md)
+      $('<iframe id="output">').appendTo($preview)
+      $('iframe#output').contents()[0].documentElement.innerHTML = md;
+
+      for (var i = 0; i < cssFiles; i++) {
+        cssFile = cssFiles[i]
+        if ($('iframe#output').contents().find('head > link[href="' + cssFile + '"]').length === 0) {
+          $('iframe#output').contents().find('head').append('<link rel="stylesheet" type="text/css" href="' + cssFile + '">')
+        }
+      }
+
+      $('iframe#output').contents().on('keyup', function() {
+        editor.getSession().setValue($('iframe#output').contents()[0].documentElement.outerHTML)
+      });
+      mediumEditor = new MediumEditor(document.querySelector("#preview iframe").contentWindow.document.body);
+
     }
     else {
       $preview
@@ -926,6 +962,14 @@ $(function() {
    */
   function bindPreview() {
     $('#editor').bind('keyup', previewMd);
+  }
+
+  function bindPreviewHTML() {
+    // $(window).load(function() {
+    //   $('iframe#output').contents().on('keyup', function() {
+    //     editor.getSession().setValue($('iframe#output').contents()[0].documentElement.outerHTML)
+    //   });
+    // })
   }
 
   /**
@@ -1683,8 +1727,8 @@ $(function() {
           a = b = null
           response = JSON.parse(response.responseText)
           // console.log('\nFetch Tree Files...')
-          // console.dir(response)
-          if (!response.tree.length) {
+          console.log(a, b, response)
+          if (!(response.tree && response.tree.length)) {
             Notifier.showMessage('No tree files available!')
           }
           else {
@@ -1733,7 +1777,6 @@ $(function() {
             setCurrentFilenameField(name)
 
             Github.setInfo(url, opts);
-
 
             previewMd()
 
@@ -2360,3 +2403,9 @@ window.onload = function() {
   window.ace.edit('editor').session.on('changeScrollTop', syncPreview);
   window.ace.edit('editor').session.selection.on('changeCursor', syncPreview);
 }
+
+$("#sending-test-email").click(function() {
+  outputHtml = $("#preview iframe").contents().find("body").html();
+  outputTitle = outputHtml.match(/<title>([\s\S]*)<\/title>/i)
+  $.post('/email/send', { subject: "[[TEST-EMAIL]]: " + (outputTitle ? outputTitle[1] : ""), html: outputHtml })
+})

@@ -134,10 +134,10 @@ exports.Github = (function() {
       var uri;
 
       if (req.body.owner !== req.session.github.username) {
-        uri = githubApi + 'orgs/' + req.body.owner + '/repos?access_token=' + req.session.github.oauth
+        uri = githubApi + 'orgs/' + req.body.owner + '/repos?sort=full_name&access_token=' + req.session.github.oauth
       }
       else {
-        uri = githubApi + 'user/repos?access_token=' + req.session.github.oauth
+        uri = githubApi + 'user/repos?sort=full_name&access_token=' + req.session.github.oauth
       }
 
       if (isFinite(req.body.page) && +req.body.page > 1) {
@@ -293,7 +293,7 @@ exports.Github = (function() {
 
           if (isPrivateRepo) {
             d = JSON.parse(d)
-            jsonResp.data = (new Buffer(d.content, 'base64').toString('ascii'))
+            jsonResp.data = (new Buffer(d.content, 'base64').toString('utf8'))
           }
 
           res.json(jsonResp)
