@@ -2375,7 +2375,6 @@ window.onload = function() {
 }
 
 $("#sending-test-email").click(function() {
-  alert("you click button");
   outputHtml = $("#preview iframe").contents().find("body").html();
   outputTitle = outputHtml.match(/<title>([\s\S]*)<\/title>/i)
   $.post('/email/send', { subject: "[[TEST-EMAIL]]: " + (outputTitle ? outputTitle[1] : ""), html: outputHtml })
