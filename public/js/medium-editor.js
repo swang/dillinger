@@ -390,7 +390,7 @@ if (typeof module === 'object') {
             this.anchorInput = this.anchorForm.querySelector('input');
             this.toolbarActions = this.toolbar.querySelector('.medium-editor-toolbar-actions');
             this.anchorPreview = this.createAnchorPreview();
-            console.log(this)
+            // console.log(this)
 
             return this;
         },
@@ -401,7 +401,7 @@ if (typeof module === 'object') {
             toolbar.className = 'medium-editor-toolbar';
             toolbar.appendChild(this.toolbarButtons());
             toolbar.appendChild(this.toolbarFormAnchor());
-            console.log(this.options.elementsContainer);
+            // console.log(this.options.elementsContainer);
             this.options.elementsContainer.appendChild(toolbar);
             return toolbar;
         },
@@ -587,29 +587,28 @@ if (typeof module === 'object') {
                 // boundary = range.getBoundingClientRect(),
                 // defaultLeft = (this.options.diffLeft) - (this.toolbar.offsetWidth / 2),
                 // middleBoundary = (boundary.left + boundary.right) / 2,
-                // halfOffsetWidth = this.toolbar.offsetWidth / 2;
+                // halfOffsetWidth = this.toolbar.offsetWidth / 2
 
-
-            console.log(buttonHeight, selection, range, boundary, defaultLeft, middleBoundary, halfOffsetWidth)
+            // console.log(buttonHeight, selection, range, boundary, defaultLeft, middleBoundary, halfOffsetWidth)
             if (boundary.top < buttonHeight) {
-                console.log("1")
+                //console.log("1")
                 this.toolbar.classList.add('medium-toolbar-arrow-over');
                 this.toolbar.classList.remove('medium-toolbar-arrow-under');
                 this.toolbar.style.top = buttonHeight + boundary.bottom - this.options.diffTop + window.pageYOffset - this.toolbar.offsetHeight + 'px';
             } else {
-                console.log("2")
+                //console.log("2")
                 this.toolbar.classList.add('medium-toolbar-arrow-under');
                 this.toolbar.classList.remove('medium-toolbar-arrow-over');
                 this.toolbar.style.top = boundary.top + this.options.diffTop + window.pageYOffset - this.toolbar.offsetHeight + 'px';
             }
             if (middleBoundary < halfOffsetWidth) {
-                console.log("3")
+                //console.log("3")
                 this.toolbar.style.left = defaultLeft + halfOffsetWidth + 'px';
             } else if ((window.innerWidth - middleBoundary) < halfOffsetWidth) {
-                console.log("4")
+                //console.log("4")
                 this.toolbar.style.left = window.innerWidth + defaultLeft - halfOffsetWidth + 'px';
             } else {
-                console.log("5")
+                //console.log("5")
                 this.toolbar.style.left = defaultLeft + middleBoundary + 'px';
             }
 

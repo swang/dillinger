@@ -600,8 +600,22 @@ $(function() {
       , md = converter(unmd)
 
     if (editorType().type === 'html') {
-      $preview.html('')
-      $('<iframe>').appendTo($preview).contents().find('body').html(md)
+
+      // console.log($('iframe[src="medium.html"]').contents().find('body > .content'))
+      console.log(document.querySelector('iframe#rte'))
+      if (document.querySelector('iframe#rte') == undefined) {
+        $preview.html('')
+        iframeView = $('<iframe id="rte">');
+        iframeView.appendTo($preview);
+        iframeView[0].src="medium.html";
+        iframeView.on('load', function() {
+          iframeView.contents().find('body > .content').html(md);
+        })
+      }
+      else {
+        iframeView = $('iframe#rte')
+        iframeView.contents().find('body > .content').html(md);
+      }
     }
     else {
       $preview
