@@ -36,16 +36,21 @@
 <link rel="stylesheet" type="text/css" href="./css/themes/popline.css" />
 
 
-<!--script src="js/medium-editor.js"></script-->
+<script src="js/medium-editor.js"></script>
 
 <script>
 $(window).load(function() {
 
-//  var mediumEditor = new MediumEditor(document.querySelector("body"));
+var mediumEditor = new MediumEditor(document.querySelector("#preview iframe").contentWindow.document.body, {
+  elementsContainer: document.querySelector("#preview iframe").contentWindow.document.body
+});
+
+
+
 // $("#preview > iframe").contents().find("body").popline();
 // $("div#filename > span").popline({ position: 'relative', enable: ["link", "blockquote"]});
 
-$("#preview iframe").contents().find("body").popline({ position: 'relative', enable: ["link", "blockquote"]});
+//$("#preview iframe").contents().find("body").popline({ position: 'relative', enable: ["link", "blockquote"]});
 
 })
 </script>

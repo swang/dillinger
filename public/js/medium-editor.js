@@ -30,6 +30,7 @@ if (typeof module === 'object') {
             len,
             ranges,
             sel = window.getSelection();
+        console.log("saveSelection")
         if (sel.getRangeAt && sel.rangeCount) {
             ranges = [];
             for (i = 0, len = sel.rangeCount; i < len; i += 1) {
@@ -44,6 +45,7 @@ if (typeof module === 'object') {
         var i,
             len,
             sel = window.getSelection();
+        console.log("restoreSelection")
         if (savedSel) {
             sel.removeAllRanges();
             for (i = 0, len = savedSel.length; i < len; i += 1) {
@@ -55,6 +57,7 @@ if (typeof module === 'object') {
     // http://stackoverflow.com/questions/1197401/how-can-i-get-the-element-the-caret-is-in-with-javascript-when-using-contentedi
     // by You
     function getSelectionStart() {
+        console.log("getSelectionStart")
         var node = document.getSelection().anchorNode,
             startNode = (node && node.nodeType === 3 ? node.parentNode : node);
         return startNode;
@@ -123,12 +126,14 @@ if (typeof module === 'object') {
         isIE: ((navigator.appName === 'Microsoft Internet Explorer') || ((navigator.appName === 'Netscape') && (new RegExp('Trident/.*rv:([0-9]{1,}[.0-9]{0,})').exec(navigator.userAgent) !== null))),
 
         init: function (elements, options) {
+            console.log(elements, options)
             this.setElementSelection(elements);
+            console.log("this.elements", this.elements, this.elements.length)
             if (this.elements.length === 0) {
                 return;
             }
             this.parentElements = ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'blockquote', 'pre'];
-            this.id = document.querySelectorAll('.medium-editor-toolbar').length + 1;
+            this.id = (options.elementsContainer ? options.elementsContainer.ownerDocument : document).querySelectorAll('.medium-editor-toolbar').length + 1;
             this.options = extend(options, this.defaults);
             return this.setup();
         },
@@ -174,11 +179,14 @@ if (typeof module === 'object') {
 
         setElementSelection: function (selector) {
             this.elementSelection = selector;
+            console.log("selector" ,selector)
             this.updateElementList();
         },
 
         updateElementList: function () {
-            this.elements = typeof this.elementSelection === 'string' ? document.querySelectorAll(this.elementSelection) : this.elementSelection;
+            // this.elements = typeof this.elementSelection === 'string' ? (document.activeElement && document.activeElement.contentWindow.document || document).querySelectorAll(this.elementSelection) : this.elementSelection;
+            this.elements = typeof this.elementSelection === 'string' ? (document.querySelectorAll(this.elementSelection)) : this.elementSelection;
+            console.log(this.elements)
             if (this.elements.nodeType === 1) {
                 this.elements = [this.elements];
             }
@@ -390,13 +398,14 @@ if (typeof module === 'object') {
             this.anchorInput = this.anchorForm.querySelector('input');
             this.toolbarActions = this.toolbar.querySelector('.medium-editor-toolbar-actions');
             this.anchorPreview = this.createAnchorPreview();
-            console.log(this)
+            console.log("initToolbar", this)
 
             return this;
         },
 
         createToolbar: function () {
-            var toolbar = document.createElement('div');
+            console.log("createToolbar: this.options: ", this.options)
+            var toolbar = this.options.elementsContainer.ownerDocument.createElement('div');
             toolbar.id = 'medium-editor-toolbar-' + this.id;
             toolbar.className = 'medium-editor-toolbar';
             toolbar.appendChild(this.toolbarButtons());
@@ -473,6 +482,7 @@ if (typeof module === 'object') {
 
                 clearTimeout(timer);
                 timer = setTimeout(function () {
+                    // console.log("checkSelectionTimer")
                     self.checkSelection();
                 }, self.options.delay);
             };
@@ -489,7 +499,7 @@ if (typeof module === 'object') {
         checkSelection: function () {
             var newSelection,
                 selectionElement;
-
+            console.log("checkSelection")
             if (this.keepToolbarAlive !== true && !this.options.disableToolbar) {
                 newSelection = window.getSelection();
                 if (newSelection.toString().trim() === '' ||
@@ -524,6 +534,7 @@ if (typeof module === 'object') {
 
         checkSelectionElement: function (newSelection, selectionElement) {
             var i;
+            console.log("checkSelectionElement", newSelection, selectionElement)
             this.selection = newSelection;
             this.selectionRange = this.selection.getRangeAt(0);
             for (i = 0; i < this.elements.length; i += 1) {
@@ -538,7 +549,8 @@ if (typeof module === 'object') {
         },
 
         getSelectionElement: function () {
-            var selection = window.getSelection(),
+            console.log("getSeleEle.0")
+            var selection = (document.activeElement.contentWindow ? document.activeElement.contentWindow.window : window).getSelection(),
                 range, current, parent,
                 result,
                 getMediumElement = function (e) {
@@ -552,6 +564,7 @@ if (typeof module === 'object') {
                     }
                     return localParent;
                 };
+            console.log("getSeleEle")
             // First try on current node
             try {
                 range = selection.getRangeAt(0);
@@ -571,9 +584,8 @@ if (typeof module === 'object') {
         },
 
         setToolbarPosition: function () {
-            // alert("set")
             var buttonHeight = 50,
-                selection = window.getSelection(),
+                selection = (document.activeElement.contentWindow && document.activeElement.contentWindow ? document.activeElement.contentWindow : window).getSelection(),
                 range = selection.getRangeAt(0),
                 boundary = range.getBoundingClientRect(),
                 defaultLeft = (this.options.diffLeft) - (this.toolbar.offsetWidth / 2),
@@ -651,12 +663,14 @@ if (typeof module === 'object') {
         },
 
         bindButtons: function () {
+            console.log("bindButtons: this.toolbar", this.toolbar)
             var buttons = this.toolbar.querySelectorAll('button'),
                 i,
                 self = this,
                 triggerAction = function (e) {
                     e.preventDefault();
                     e.stopPropagation();
+                    console.log("bindButtons.triggerAction")
                     if (self.selection === undefined) {
                         self.checkSelection();
                     }
@@ -670,8 +684,10 @@ if (typeof module === 'object') {
                     }
                 };
             for (i = 0; i < buttons.length; i += 1) {
+                console.log(buttons[i])
                 buttons[i].addEventListener('click', triggerAction);
             }
+            // console.log("bindButtons")
             this.setFirstAndLastItems(buttons);
             return this;
         },
@@ -685,6 +701,7 @@ if (typeof module === 'object') {
         },
 
         execAction: function (action, e) {
+            console.log("execAction" , action,e )
             if (action.indexOf('append-') > -1) {
                 this.execFormatBlock(action.replace('append-', ''));
                 this.setToolbarPosition();
@@ -701,6 +718,7 @@ if (typeof module === 'object') {
 
         // http://stackoverflow.com/questions/15867542/range-object-get-selection-parent-node-chrome-vs-firefox
         rangeSelectsSingleNode: function (range) {
+            console.log("rangeSelectsSingleNode", range)
             var startNode = range.startContainer;
             return startNode === range.endContainer &&
                 startNode.hasChildNodes() &&
@@ -710,6 +728,7 @@ if (typeof module === 'object') {
         getSelectedParentElement: function () {
             var selectedParentElement = null,
                 range = this.selectionRange;
+            console.log("getSelectedParentElement", range)
             if (this.rangeSelectsSingleNode(range)) {
                 selectedParentElement = range.startContainer.childNodes[range.startOffset];
             } else if (range.startContainer.nodeType === 3) {
@@ -762,7 +781,7 @@ if (typeof module === 'object') {
 
         getSelectionData: function (el) {
             var tagName;
-
+            console.log("getSelectionData: ", el)
             if (el && el.tagName) {
                 tagName = el.tagName.toLowerCase();
             }
@@ -798,6 +817,7 @@ if (typeof module === 'object') {
         showToolbarActions: function () {
             var self = this,
                 timer;
+            console.log("showToolbarActions")
             this.anchorForm.style.display = 'none';
             this.toolbarActions.style.display = 'block';
             this.keepToolbarAlive = false;
@@ -1074,12 +1094,14 @@ if (typeof module === 'object') {
             this.windowResizeHandler = function () {
                 clearTimeout(timerResize);
                 timerResize = setTimeout(function () {
+                    console.log("bindWindowActions.timerResize")
                     if (self.toolbar && self.toolbar.classList.contains('medium-editor-toolbar-active')) {
                         self.setToolbarPosition();
                     }
                 }, 100);
             };
-            window.addEventListener('resize', this.windowResizeHandler);
+            console.log("bindWindowActions")
+            document.addEventListener('resize', this.windowResizeHandler);
             return this;
         },
 
