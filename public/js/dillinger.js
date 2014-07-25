@@ -601,7 +601,9 @@ $(function() {
 
     if (editorType().type === 'html') {
       $preview.html('')
-      $('<iframe>').appendTo($preview).contents().find('body').html(md)
+      $('<iframe id="output">').appendTo($preview).contents().find('body').html(md)
+      $('iframe#output').contents().find('head').append('<link rel="stylesheet" type="text/css" href="./css/medium-editor.css"><link rel="stylesheet" type="text/css" href="./css/themes/default.css" />')
+
     }
     else {
       $preview

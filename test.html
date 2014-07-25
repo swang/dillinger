@@ -4,8 +4,8 @@
     <title>medium editor | demo</title>
     <!--link rel="stylesheet" href="css/demo.css"-->
     <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
-    <link rel="stylesheet" href="./dist/css/medium-editor.css">
-    <link rel="stylesheet" href="./dist/css/themes/default.css">
+    <link rel="stylesheet" href="./public/css/medium-editor.css">
+    <link rel="stylesheet" href="./public/css/themes/default.css">
 <style>
 .editable,
 .secondEditable
@@ -36,7 +36,7 @@
 
     <iframe sandbox='allow-scripts allow-same-origin' style="background: #aafcaa; border: 1px solid black;" id="ttt" width="100%"></iframe>
 
-    <script src="./src/js/medium-editor.js"></script>
+    <script src="./public/js/medium-editor.js"></script>
     <script>
         // var editor = new MediumEditor('.editable22', {
         //     elementsContainer: function() { return document.querySelector("#ttt").contentWindow.body },
@@ -46,12 +46,37 @@
             // elementsContainer: '',
             buttonLabels: 'fontawesome'
         });
+
+
     </script>
 
     <script>
     // Create a new blank iframe
-    var newIframe = document.querySelector("iframe#ttt").contentDocument.querySelector("body").innerHTML = "<div class='editable22'><p>Sed eget gravida nisi. Quisque et neque nisi. Etiam nulla augue, ultrices at nunc id, interdum venenatis lacus. Morbi pretium et lorem at tristique. Vestibulum malesuada magna interdum turpis interdum, ut volutpat purus rutrum. Sed tincidunt, ipsum eget tempus luctus, magna velit viverra nisi, vitae convallis eros ligula vitae purus. Etiam rhoncus sapien sit amet neque consectetur pharetra. Ut placerat velit mi, tempor lacinia erat cursus nec. Phasellus eu cursus lectus. Curabitur vestibulum metus sit amet eros egestas tincidunt.</p></div>";
+    var newIframe = document.querySelector("iframe#ttt").contentDocument.querySelector("body").innerHTML = "<div  spellcheck='false' class='editable22'><p>Sed eget gravida nisi. Quisque et neque nisi. Etiam nulla augue, ultrices at nunc id, interdum venenatis lacus. Morbi pretium et lorem at tristique. Vestibulum malesuada magna interdum turpis interdum, ut volutpat purus rutrum. Sed tincidunt, ipsum eget tempus luctus, magna velit viverra nisi, vitae convallis eros ligula vitae purus. Etiam rhoncus sapien sit amet neque consectetur pharetra. Ut placerat velit mi, tempor lacinia erat cursus nec. Phasellus eu cursus lectus. Curabitur vestibulum metus sit amet eros egestas tincidunt.</p></div>";
+    document.querySelector('iframe#ttt').contentDocument.querySelector('head').innerHTML = '<link rel="stylesheet" type="text/css" href="./public/css/medium-editor.css"><link rel="stylesheet" type="text/css" href="./public/css/themes/flat.css" />';
+
+    var editor2 = new MediumEditor(document.querySelector("iframe#ttt").contentDocument.querySelector("body"), {
+            elementsContainer: document.querySelector("iframe#ttt").contentDocument.querySelector("body"),
+            // buttonLabels: 'fontawesome'
+        });
+
+
+
+    var lastActive, lastColor;
+    setInterval(function() {
+        if (lastActive != document.activeElement) {
+            // if (!!lastActive) {
+            //     lastActive.style.background = '';
+            // }
+            document.querySelector("#contentWindow").innerHTML = document.activeElement.contentWindow ? "true":"false";
+            // document.activeElement.style.background = '#ff0000';
+            lastActive = document.activeElement;
+            // console.log(document.activeElement.ownerDocument)
+        }
+    }, 100)
     </script>
+    <H1>Content Window</h1>
+    <div id="contentWindow"></div>
 </body>
 
 </html>
