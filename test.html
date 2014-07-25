@@ -32,11 +32,11 @@
 <p>Donec a purus rhoncus, interdum mauris id, aliquet arcu. Curabitur sollicitudin augue et lacus fringilla, quis varius quam volutpat. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Sed at massa ac libero placerat facilisis ut in sem. Pellentesque mi lectus, vulputate at iaculis at, ullamcorper sed erat. Donec viverra sagittis lorem nec eleifend. Nulla convallis in risus eget condimentum. Cras eu diam pellentesque, laoreet diam nec, pulvinar dolor. Mauris ut turpis eget lectus placerat pellentesque. Etiam vitae sem bibendum, eleifend mauris quis, luctus orci. Vestibulum semper tortor sapien, eu pretium dolor egestas non. Interdum et malesuada fames ac ante ipsum primis in faucibus. Nullam eu nunc vitae erat scelerisque interdum eu eget dolor. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Aliquam auctor laoreet velit, nec dignissim nunc aliquam et.</p>
 </div>
 
-
+<script src="./public/js/medium-editor.js"></script>
 
     <iframe sandbox='allow-scripts allow-same-origin' style="background: #aafcaa; border: 1px solid black;" id="ttt" width="100%"></iframe>
 
-    <script src="./public/js/medium-editor.js"></script>
+
     <script>
         // var editor = new MediumEditor('.editable22', {
         //     elementsContainer: function() { return document.querySelector("#ttt").contentWindow.body },
@@ -55,7 +55,7 @@
     var newIframe = document.querySelector("iframe#ttt").contentDocument.querySelector("body").innerHTML = "<div  spellcheck='false' class='editable22'><p>Sed eget gravida nisi. Quisque et neque nisi. Etiam nulla augue, ultrices at nunc id, interdum venenatis lacus. Morbi pretium et lorem at tristique. Vestibulum malesuada magna interdum turpis interdum, ut volutpat purus rutrum. Sed tincidunt, ipsum eget tempus luctus, magna velit viverra nisi, vitae convallis eros ligula vitae purus. Etiam rhoncus sapien sit amet neque consectetur pharetra. Ut placerat velit mi, tempor lacinia erat cursus nec. Phasellus eu cursus lectus. Curabitur vestibulum metus sit amet eros egestas tincidunt.</p></div>";
     document.querySelector('iframe#ttt').contentDocument.querySelector('head').innerHTML = '<link rel="stylesheet" type="text/css" href="./public/css/medium-editor.css"><link rel="stylesheet" type="text/css" href="./public/css/themes/flat.css" />';
 
-    var editor2 = new MediumEditor(document.querySelector("iframe#ttt").contentDocument.querySelector("body"), {
+    var editor2 = new MediumEditor(document.querySelector("iframe#ttt").contentDocument.querySelector(".editable22"), {
             elementsContainer: document.querySelector("iframe#ttt").contentDocument.querySelector("body"),
             // buttonLabels: 'fontawesome'
         });

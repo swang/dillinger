@@ -425,6 +425,7 @@ if (typeof module === 'object') {
             toolbar.appendChild(this.toolbarFormAnchor());
             console.log(this.options.elementsContainer);
             this.options.elementsContainer.appendChild(toolbar);
+            // document.body.appendChild(toolbar);
             return toolbar;
         },
 
@@ -490,18 +491,20 @@ if (typeof module === 'object') {
 
                 // Do not close the toolbar when bluring the editable area and clicking into the anchor form
                 if (e && self.clickingIntoArchorForm(e)) {
+                    console.log("err: ", e)
                     return false;
                 }
 
                 clearTimeout(timer);
                 timer = setTimeout(function () {
-                    // console.log("checkSelectionTimer")
+                    console.log("checkSelectionTimer", e)
                     self.checkSelection();
                 }, self.options.delay);
             };
             // console.log("t.o.eC ", this.options.elementsContainer.ownerDocument);
             var realDoc = ((document.activeElement.contentWindow && document.activeElement.contentWindow.ownerDocument) || document);
-            realDoc.documentElement.addEventListener('mouseup', this.checkSelectionWrapper);
+            console.log("addEventListener mouseup in bindSelect")
+            realDoc.documentElement.addEventListener('mouseup', function() { console.log('mouseup!'); return self.checkSelectionWrapper() });
 
             // function getDocuEle() {
             //     var docuEle;
@@ -530,7 +533,7 @@ if (typeof module === 'object') {
         checkSelection: function () {
             var newSelection,
                 selectionElement;
-            // console.log("checkSelection")
+            console.log("checkSelection->newSelection")
             if (this.keepToolbarAlive !== true && !this.options.disableToolbar) {
                 // newSelection = window.getSelection();
                 newSelection = (document.activeElement.contentWindow || window).getSelection();
@@ -574,12 +577,14 @@ if (typeof module === 'object') {
             this.selectionRange = this.selection.getRangeAt(0);
             for (i = 0; i < this.elements.length; i += 1) {
                 if (this.elements[i] === selectionElement) {
+                    console.log("cse true")
                     this.setToolbarButtonStates()
                         .setToolbarPosition()
                         .showToolbarActions();
                     return;
                 }
             }
+            console.log("cse false")
             this.hideToolbarActions();
         },
 
@@ -1154,7 +1159,8 @@ if (typeof module === 'object') {
                 }, 100);
             };
             console.log("bindWindowActions")
-            document.addEventListener('resize', this.windowResizeHandler);
+            var realDoc = ((document.activeElement.contentWindow && document.activeElement.contentWindow.ownerDocument) || document);
+            realDoc.addEventListener('resize', function() { console.log("resize"); return self.windowResizeHandler() });
             return this;
         },
 
@@ -1260,6 +1266,7 @@ if (typeof module === 'object') {
                 };
             for (i = 0; i < this.elements.length; i += 1) {
                 activatePlaceholder(this.elements[i]);
+                console.log("trying: ", this.elements[i])
                 this.elements[i].addEventListener('blur', placeholderWrapper);
                 this.elements[i].addEventListener('keypress', placeholderWrapper);
             }
