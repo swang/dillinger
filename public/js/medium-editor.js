@@ -502,9 +502,9 @@ if (typeof module === 'object') {
                 }, self.options.delay);
             };
             // console.log("t.o.eC ", this.options.elementsContainer.ownerDocument);
-            var realDoc = ((document.activeElement.contentWindow && document.activeElement.contentWindow.ownerDocument) || document);
-            console.log("addEventListener mouseup in bindSelect")
-            realDoc.documentElement.addEventListener('mouseup', function() { console.log('mouseup!'); return self.checkSelectionWrapper() });
+            var realDoc = (this.options.elementsContainer.ownerDocument || document);
+            console.log("addEventListener mouseup in bindSelect", realDoc, this.options.elementsContainer.ownerDocument)
+            realDoc.addEventListener('mouseup', this.checkSelectionWrapper);
 
             // function getDocuEle() {
             //     var docuEle;
@@ -577,7 +577,7 @@ if (typeof module === 'object') {
             this.selectionRange = this.selection.getRangeAt(0);
             for (i = 0; i < this.elements.length; i += 1) {
                 if (this.elements[i] === selectionElement) {
-                    console.log("cse true")
+                    console.log("cse true", this.elements[i], selectionElement)
                     this.setToolbarButtonStates()
                         .setToolbarPosition()
                         .showToolbarActions();
