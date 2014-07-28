@@ -55,12 +55,15 @@
     var newIframe;
     console.log("what")
     window.onload = function() {
-        document.querySelector("iframe#ttt").contentDocument.querySelector("body").innerHTML = "<div  spellcheck='false' class='editable22'><p>Sed eget gravida nisi. Quisque et neque nisi. Etiam nulla augue, ultrices at nunc id, interdum venenatis lacus. Morbi pretium et lorem at tristique. Vestibulum malesuada magna interdum turpis interdum, ut volutpat purus rutrum. Sed tincidunt, ipsum eget tempus luctus, magna velit viverra nisi, vitae convallis eros ligula vitae purus. Etiam rhoncus sapien sit amet neque consectetur pharetra. Ut placerat velit mi, tempor lacinia erat cursus nec. Phasellus eu cursus lectus. Curabitur vestibulum metus sit amet eros egestas tincidunt.</p></div>";
+        var iframeDoc = document.querySelector("iframe#ttt").contentDocument
+        iframeDoc.querySelector("body").innerHTML = "<div spellcheck='false' class='editable22'><p>Sed eget gravida nisi. Quisque et neque nisi. Etiam nulla augue, ultrices at nunc id, interdum venenatis lacus. Morbi pretium et lorem at tristique. Vestibulum malesuada magna interdum turpis interdum, ut volutpat purus rutrum. Sed tincidunt, ipsum eget tempus luctus, magna velit viverra nisi, vitae convallis eros ligula vitae purus. Etiam rhoncus sapien sit amet neque consectetur pharetra. Ut placerat velit mi, tempor lacinia erat cursus nec. Phasellus eu cursus lectus. Curabitur vestibulum metus sit amet eros egestas tincidunt.</p></div>";
 
-        document.querySelector('iframe#ttt').contentDocument.querySelector('head').innerHTML = '<link rel="stylesheet" type="text/css" href="./public/css/medium-editor.css"><link rel="stylesheet" type="text/css" href="./public/css/themes/flat.css" />';
-        console.log("content: ", document.querySelector('iframe#ttt').contentDocument)
+        iframeDoc.querySelector('head').innerHTML = '<link rel="stylesheet" type="text/css" href="./public/css/medium-editor.css"><link rel="stylesheet" type="text/css" href="./public/css/themes/flat.css" />';
+
+        iframeDoc.querySelector("body").style.margin = "8px"
+
         var editor2 = new MediumEditor(document.querySelector("iframe#ttt").contentDocument.querySelector(".editable22"), {
-                elementsContainer: document.querySelector("iframe#ttt").contentDocument.querySelector("body"),
+                // elementsContainer: document.querySelector("iframe#ttt").contentDocument.querySelector("body"),
                 // buttonLabels: 'fontawesome'
             });
     }

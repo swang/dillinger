@@ -62,7 +62,7 @@ if (typeof module === 'object') {
 
         // var node = document.getSelection().anchorNode,
         // var node = document.activeElement.ownerDocument.getSelection().anchorNode,
-        var realDoc = ((document.activeElement.contentWindow && document.activeElement.contentWindow.ownerDocument) || document)
+        var realDoc = (document.activeElement.ownerDocument || document)
         var node = realDoc.getSelection().anchorNode,
             startNode = (node && node.nodeType === 3 ? node.parentNode : node);
         // console.log("getSelectionStart", docEle, node, startNode, document.getSelection().anchorNode)
@@ -78,7 +78,7 @@ if (typeof module === 'object') {
             len,
             container,
             realWin = (document.activeElement.contentWindow || window),
-            realDoc = ((document.activeElement.contentWindow && document.activeElement.contentWindow.ownerDocument) || document)
+            realDoc = (document.activeElement.ownerDocument || document)
 
         if (realWin.getSelection !== undefined) {
             sel = realWin.getSelection();
@@ -137,12 +137,13 @@ if (typeof module === 'object') {
         init: function (elements, options) {
             console.log(elements, options)
             this.setElementSelection(elements);
-            console.log("this.elements", this.elements, this.elements.length)
+            // console.log("this.elements", this.elements, this.elements.length)
             if (this.elements.length === 0) {
                 return;
             }
             this.parentElements = ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'blockquote', 'pre'];
-            this.id = (options.elementsContainer ? options.elementsContainer.ownerDocument : document).querySelectorAll('.medium-editor-toolbar').length + 1;
+            // this.id = (options.elementsContainer ? options.elementsContainer.ownerDocument : document).querySelectorAll('.medium-editor-toolbar').length + 1;
+            this.id = document.activeElement.ownerDocument.querySelectorAll('.medium-editor-toolbar').length + 1;
             this.options = extend(options, this.defaults);
             return this.setup();
         },
@@ -194,7 +195,7 @@ if (typeof module === 'object') {
 
         updateElementList: function () {
             // this.elements = typeof this.elementSelection === 'string' ? (document.activeElement && document.activeElement.contentWindow.document || document).querySelectorAll(this.elementSelection) : this.elementSelection;
-            this.elements = typeof this.elementSelection === 'string' ? (document.querySelectorAll(this.elementSelection)) : this.elementSelection;
+            this.elements = typeof this.elementSelection === 'string' ? (document.activeElement.ownerDocument.querySelectorAll(this.elementSelection)) : this.elementSelection;
             console.log(this.elements)
             if (this.elements.nodeType === 1) {
                 this.elements = [this.elements];
@@ -242,7 +243,7 @@ if (typeof module === 'object') {
 
         bindParagraphCreation: function (index) {
             var self = this;
-            var realDocu = ((document.activeElement.contentWindow && document.activeElement.contentWindow.ownerDocument) || document);
+            var realDocu = document.activeElement.ownerDocument;
             this.elements[index].addEventListener('keypress', function (e) {
 
                 var node = getSelectionStart(),
@@ -313,7 +314,7 @@ if (typeof module === 'object') {
         },
 
         bindTab: function (index) {
-            var realDocu = ((document.activeElement.contentWindow && document.activeElement.contentWindow.ownerDocument) || document);
+            var realDocu = document.activeElement.ownerDocument;
             this.elements[index].addEventListener('keydown', function (e) {
                 if (e.which === 9) {
                     // Override tab only for pre nodes
@@ -417,7 +418,7 @@ if (typeof module === 'object') {
 
         createToolbar: function () {
             console.log("createToolbar: this.options: ", this.options)
-            var realDoc = ((document.activeElement.contentWindow && document.activeElement.contentWindow.ownerDocument) || document)
+            var realDoc = document; //.activeElement.ownerDocument;
             var toolbar = realDoc.createElement('div');
             toolbar.id = 'medium-editor-toolbar-' + this.id;
             toolbar.className = 'medium-editor-toolbar';
@@ -497,14 +498,14 @@ if (typeof module === 'object') {
 
                 clearTimeout(timer);
                 timer = setTimeout(function () {
-                    console.log("checkSelectionTimer", e)
+                    // console.log("checkSelectionTimer", e)
                     self.checkSelection();
                 }, self.options.delay);
             };
             // console.log("t.o.eC ", this.options.elementsContainer.ownerDocument);
-            var realDoc = (this.options.elementsContainer.ownerDocument || document);
-            console.log("addEventListener mouseup in bindSelect", realDoc, this.options.elementsContainer.ownerDocument)
-            realDoc.addEventListener('mouseup', this.checkSelectionWrapper);
+            // var realDoc = (this.options.elementsContainer.ownerDocument || document);
+            // console.log("addEventListener mouseup in bindSelect", realDoc, this.options.elementsContainer.ownerDocument)
+            // realDoc.addEventListener('mouseup', function(e) { console.log("sup?", e) });
 
             // function getDocuEle() {
             //     var docuEle;
@@ -524,6 +525,7 @@ if (typeof module === 'object') {
             // }
 
             for (i = 0; i < this.elements.length; i += 1) {
+                this.elements[i].addEventListener('mouseup', this.checkSelectionWrapper);
                 this.elements[i].addEventListener('keyup', this.checkSelectionWrapper);
                 this.elements[i].addEventListener('blur', this.checkSelectionWrapper);
             }
@@ -539,7 +541,7 @@ if (typeof module === 'object') {
                 newSelection = (document.activeElement.contentWindow || window).getSelection();
                 // newSelection = (this.options.elementsContainer.ownerDocument || window).getSelection();
 
-                console.log("newSelection: ", newSelection.toString(), "::", window.getSelection())
+                // console.log("newSelection: ", newSelection.toString(), "::", window.getSelection())
                 if (newSelection.toString().trim() === '' ||
                     (this.options.allowMultiParagraphSelection === false && this.hasMultiParagraphs())) {
                     this.hideToolbarActions();
@@ -643,17 +645,18 @@ if (typeof module === 'object') {
 
 
             // console.log("setToolbarPosition", buttonHeight, selection, range, boundary, defaultLeft, middleBoundary, halfOffsetWidth)
-            var realWin = (document.activeElement.contentWindow || window)
+            // var realWin = (document.activeElement.contentWindow || window)
+            var realWin = (window)
             if (boundary.top < buttonHeight) {
                 // console.log("1")
                 this.toolbar.classList.add('medium-toolbar-arrow-over');
                 this.toolbar.classList.remove('medium-toolbar-arrow-under');
-                this.toolbar.style.top = buttonHeight + boundary.bottom - this.options.diffTop + realWin.pageYOffset - this.toolbar.offsetHeight + 'px';
+                this.toolbar.style.top = document.activeElement.offsetTop + buttonHeight + boundary.bottom - this.options.diffTop + realWin.pageYOffset - this.toolbar.offsetHeight + 'px';
             } else {
                 // console.log("2")
                 this.toolbar.classList.add('medium-toolbar-arrow-under');
                 this.toolbar.classList.remove('medium-toolbar-arrow-over');
-                this.toolbar.style.top = boundary.top + this.options.diffTop + realWin.pageYOffset - this.toolbar.offsetHeight + 'px';
+                this.toolbar.style.top = document.activeElement.offsetTop + boundary.top + this.options.diffTop + realWin.pageYOffset - this.toolbar.offsetHeight + 'px';
             }
             if (middleBoundary < halfOffsetWidth) {
                 // console.log("3")
@@ -665,6 +668,10 @@ if (typeof module === 'object') {
                 // console.log("5")
                 this.toolbar.style.left = defaultLeft + middleBoundary + 'px';
             }
+            // if (document.activeElement.contentWindow) {
+            //     console.log("daecw",  document.activeElement.offsetTop)
+            // }
+            // this.toolbar.style.top += document.activeElement.contentWindow ? document.activeElement.offsetTop : 0;
 
             this.hideAnchorPreview();
 
@@ -743,7 +750,7 @@ if (typeof module === 'object') {
 
         execAction: function (action, e) {
             console.log("execAction" , action, e)
-            var realDocu = ((document.activeElement.contentWindow && document.activeElement.contentWindow.ownerDocument) || document)
+            var realDocu = ((document.activeElement.ownerDocument) || document)
             var realWin = (document.activeElement.contentWindow || window);
             if (action.indexOf('append-') > -1) {
                 this.execFormatBlock(action.replace('append-', ''));
@@ -783,7 +790,7 @@ if (typeof module === 'object') {
         },
 
         triggerAnchorAction: function () {
-            var realDocu = ((document.activeElement.contentWindow && document.activeElement.contentWindow.ownerDocument) || document)
+            var realDocu = document.activeElement.ownerDocument;
 
             var selectedParentElement = this.getSelectedParentElement();
             console.log("triggerAnchorAction")
@@ -803,7 +810,7 @@ if (typeof module === 'object') {
         },
 
         execFormatBlock: function (el) {
-            var realDocu = ((document.activeElement.contentWindow && document.activeElement.contentWindow.ownerDocument) || document)
+            var realDocu = document.activeElement.ownerDocument;
 
             var selectionData = this.getSelectionData(this.selection.anchorNode);
             // FF handles blockquote differently on formatBlock
@@ -1014,7 +1021,7 @@ if (typeof module === 'object') {
 
         createAnchorPreview: function () {
             var self = this,
-                realDocu = ((document.activeElement.contentWindow && document.activeElement.contentWindow.ownerDocument) || document),
+                realDocu = document.activeElement.ownerDocument,
                 anchorPreview = realDocu.createElement('div');
             console.log("createAnchorPreview")
             anchorPreview.id = 'medium-editor-anchor-preview-' + this.id;
@@ -1040,7 +1047,7 @@ if (typeof module === 'object') {
             if (this.activeAnchor) {
 
                 var self = this,
-                    realDocu = ((document.activeElement.contentWindow && document.activeElement.contentWindow.ownerDocument) || document),
+                    realDocu = document.activeElement.ownerDocument,
                     range = realDocu.createRange(),
                     sel = realDocu.getSelection();
 
@@ -1159,8 +1166,8 @@ if (typeof module === 'object') {
                 }, 100);
             };
             console.log("bindWindowActions")
-            var realDoc = ((document.activeElement.contentWindow && document.activeElement.contentWindow.ownerDocument) || document);
-            realDoc.addEventListener('resize', function() { console.log("resize"); return self.windowResizeHandler() });
+            var realDoc = document.activeElement.ownerDocument;
+            realDoc.addEventListener('resize', this.windowResizeHandler);
             return this;
         },
 
